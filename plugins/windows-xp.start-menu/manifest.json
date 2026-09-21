@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "windows-xp.start-menu",
+  "name": "Windows XP Start menu",
+  "version": "1.0.0",
+  "author": "Omarchy Windows XP theme",
+  "description": "The Windows XP Start menu: blue header, two-column body and Turn Off Computer dialog",
+  "kinds": ["menu"],
+  "entryPoints": {
+    "menu": "StartMenu.qml"
+  }
+}

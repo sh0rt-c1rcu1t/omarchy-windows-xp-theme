@@ -1,0 +1,11 @@
+# Generated theme artifacts that should never be committed.
+__pycache__/
+*.pyc
+*.tmp
+*.bak
+*.bak.*
+.DS_Store
+
+# Scratch output from the generator tools.
+/tmp/
+/out/

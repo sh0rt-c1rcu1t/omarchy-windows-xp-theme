@@ -1,0 +1,182 @@
+{
+  // Windows XP Start menu for the Omarchy menu (Super + Space and friends).
+  //
+  // Installed as ~/.config/omarchy/extensions/omarchy-menu.jsonc.
+  //
+  // The Omarchy menu merges this file on top of the shipped default menu, so
+  // this file both renames the root entries to their Windows XP wording and
+  // hides the ones Windows XP never had. Rows that do exist in XP are wired to
+  // the Omarchy route that performs the same job, which keeps every keyboard
+  // binding (Super+Space, Super+CTRL+O, Super+ESCAPE, XF86PowerOff, ...) and
+  // every `omarchy menu summon <route>` call working exactly as before.
+  //
+  // `when: "false"` is the documented way to hide a row: the shell evaluates
+  // the condition in bash and an explicit false hides the entry.
+
+  // ---------------------------------------------------------------- root
+  // Windows XP's Start menu root, in XP order. The first row is All Programs.
+  "apps": {"icon":"","label":"All Programs","aliases":["app","applications","programs","all-programs"],"provider":"apps"},
+  "learn": {"icon":"","label":"Help and Support","aliases":["learn"]},
+  "trigger": {"icon":"","label":"Accessories","aliases":["accessories"]},
+  "style": {"icon":"","label":"Appearance and Themes","aliases":["appearance"]},
+  "setup": {"icon":"","label":"Control Panel","aliases":["settings","control-panel"]},
+  "install": {"icon":"","label":"Add or Remove Programs","aliases":["add-remove-programs"]},
+  "remove": {"icon":"","label":"Remove Programs","aliases":["uninstall","remove-programs"]},
+  "update": {"icon":"","label":"Windows Update","aliases":["windows-update"]},
+  "system": {"icon":"","label":"Turn Off Computer","aliases":["power-menu","shut-down","turn-off-computer"]},
+  "about": {"icon":"","label":"System Properties","action":"omarchy-launch-about"},
+
+  // Rename a few items inside those submenus to their XP wording.
+  "learn.keybindings": {"label":"Keyboard Shortcuts"},
+  "trigger.reminder": {"label":"Scheduled Tasks"},
+  "trigger.reminder.set": {"label":"Add Scheduled Task"},
+  "trigger.reminder.show": {"label":"View Scheduled Tasks"},
+  "trigger.reminder.clear": {"label":"Delete All Tasks"},
+  "trigger.capture": {"label":"Accessories", "title":"Accessories"},
+  "trigger.capture.screenshot": {"label":"Screen Capture"},
+  "trigger.capture.text": {"label":"Text Capture"},
+  "style.theme": {"label":"Change the computer's theme"},
+  "style.background": {"label":"Change the desktop background"},
+  "style.font": {"label":"Change the system font"},
+  "style.bar": {"label":"Taskbar and Start Menu"},
+  "setup.monitors": {"label":"Display"},
+  "setup.input": {"label":"Keyboard and Mouse"},
+  "setup.keybindings": {"label":"Custom Shortcuts"},
+  "setup.network": {"label":"Network Connections"},
+  "setup.network.dns": {"label":"DNS Settings"},
+  "setup.default": {"label":"Set Program Access and Defaults"},
+  "setup.default.browser": {"label":"Internet Browser"},
+  "setup.default.terminal": {"label":"Command Prompt"},
+  "setup.default.editor": {"label":"Text Editor"},
+  "setup.security": {"label":"Security Center"},
+  "setup.security.fingerprint": {"label":"Fingerprint Logon"},
+  "setup.security.passwordless-sudo": {"label":"Administrator Password"},
+  "setup.reset": {"label":"System Restore"},
+  "install.package": {"label":"Add New Programs"},
+  "install.aur": {"label":"Add Programs from the AUR"},
+  "install.webapp": {"label":"Add Web Apps"},
+  "install.style.theme": {"label":"Desktop Themes"},
+  "update.omarchy": {"label":"Install Updates"},
+  "update.channel": {"label":"Automatic Updates"},
+  "update.config": {"label":"Restore Default Settings"},
+  "update.process": {"label":"Restart Services"},
+  "update.timezone": {"label":"Date and Time"},
+  "system.shutdown": {"label":"Turn Off"},
+  "system.reboot": {"label":"Restart"},
+  "system.logout": {"label":"Log Off"},
+  "system.suspend": {"label":"Stand By"},
+  "system.hibernate": {"label":"Hibernate"},
+  "system.lock": {"label":"Lock Computer"},
+  "system.screensaver": {"label":"Screen Saver"},
+
+  // ------------------------------------------- Windows XP Start menu items
+  // The classic places from the XP Start menu, mapped to the matching folders
+  // on an Omarchy system. Dotted ids put each row on the root menu; prefixing
+  // with "xp-" keeps them from colliding with Omarchy's own ids.
+  "xp-my-documents": {
+    "label": "My Documents",
+    "action": "omarchy-launch-nautilus \"$HOME/Documents\""
+  },
+  "xp-my-pictures": {
+    "label": "My Pictures",
+    "action": "omarchy-launch-nautilus \"$HOME/Pictures\""
+  },
+  "xp-my-music": {
+    "label": "My Music",
+    "action": "omarchy-launch-nautilus \"$HOME/Music\""
+  },
+  "xp-my-videos": {
+    "label": "My Videos",
+    "action": "omarchy-launch-nautilus \"$HOME/Videos\""
+  },
+  "xp-my-computer": {
+    "label": "My Computer",
+    "title": "My Computer"
+  },
+  "xp-my-computer.disk": {
+    "label": "Local Disk (C:)",
+    "action": "omarchy-launch-nautilus /"
+  },
+  "xp-my-computer.home": {
+    "label": "Local Disk (D:)",
+    "action": "omarchy-launch-nautilus \"$HOME\""
+  },
+  "xp-my-computer.overview": {
+    "label": "View System Information",
+    "action": "omarchy-launch-about"
+  },
+  "xp-my-computer.removable": {
+    "label": "Devices with Removable Storage",
+    "action": "omarchy-launch-nautilus /run/media/$USER"
+  },
+  "xp-my-computer.shared": {
+    "label": "Shared Documents",
+    "action": "omarchy-launch-nautilus \"$HOME/Public\""
+  },
+  "xp-my-computer.recycle-bin": {
+    "label": "Recycle Bin",
+    "action": "omarchy-launch-nautilus trash://"
+  },
+  "xp-my-network-places": {
+    "label": "My Network Places",
+    "title": "My Network Places"
+  },
+  "xp-my-network-places.wifi": {
+    "label": "Wireless Network Connection",
+    "action": "omarchy-menu summon setup.network"
+  },
+  "xp-my-network-places.bluetooth": {
+    "label": "Bluetooth Devices",
+    "action": "omarchy-shell shell summon omarchy.bluetooth"
+  },
+  "xp-my-network-places.tailscale": {
+    "label": "Tailscale Machines",
+    "action": "omarchy-shell shell summon omarchy.tailscale"
+  },
+  "xp-my-network-places.localsend": {
+    "label": "LocalSend",
+    "action": "uwsm-app -- localsend"
+  },
+  "xp-recent-documents": {
+    "label": "My Recent Documents",
+    "action": "omarchy-launch-floating-terminal-with-presentation omarchy-menu-share clipboard"
+  },
+  "xp-run": {
+    "label": "Run...",
+    "action": "omarchy-launch-floating-terminal-with-presentation omarchy-launch-shell"
+  },
+  "xp-log-off": {
+    "label": "Log Off",
+    "action": "omarchy-system-logout"
+  },
+  "xp-turn-off-computer": {
+    "label": "Turn Off Computer",
+    "aliases": ["turn-off-computer"],
+    "action": "omarchy-menu summon system"
+  },
+  "xp-control-panel": {
+    "label": "Control Panel",
+    "target": "setup"
+  },
+  "xp-help-support": {
+    "label": "Help and Support",
+    "target": "learn"
+  },
+  "xp-search": {
+    "label": "Search",
+    "aliases": ["find"],
+    "action": "omarchy-menu toggle apps"
+  },
+  "xp-programs": {
+    "label": "Programs",
+    "target": "apps"
+  },
+
+  // ------------------------------------------------------- hidden routes
+  // Nothing in Windows XP maps to these, so they stay reachable by name
+  // (`omarchy menu summon trigger.tests`) but never appear as a row.
+  "trigger.tests": {"when": "false"},
+  "trigger.hardware.touchpad-haptics": {"when": "false"},
+  "install.ai.dictation": {"when": "false"},
+  "update.themes": {"when": "false"}
+}

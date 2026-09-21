@@ -1,0 +1,8 @@
+[Sound Theme]
+Name=Windows XP
+Comment=Windows XP sound scheme for Omarchy
+Inherits=freedesktop
+Directories=stereo
+
+[stereo]
+OutputProfile=stereo

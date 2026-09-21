@@ -1,0 +1,184 @@
+# Omarchy shell surfaces, styled as the Windows XP "Luna" blue theme.
+#
+# Colours derive from colors.toml where the mapping is meaningful; the taskbar,
+# Start menu and dialog greys are pinned to their exact Luna values so the
+# shell reads as Windows XP regardless of which palette keys colors.toml
+# happens to expose.
+#
+# Sizes are the Windows XP metrics at 96 DPI:
+#   taskbar height            30 px  (the classic "one row + grip" taskbar)
+#   Start menu row height     22 px
+#   Start menu width         380 px  (left list + blue right panel)
+
+[bar]
+# Luna taskbar blue: #245edb at the ends, #3f8cf3 through the middle.
+background       = "#245edb"
+background-alpha = 1.0
+# The taskbar labels are white with a soft dark edge.
+text             = "#ffffff"
+active           = "#ffd800"
+scale-with-font  = false
+size-horizontal  = 30
+size-vertical    = 30
+
+[hyprland]
+# XP windows have a 3px blue border when focused and a muted blue when not.
+active-border            = "#0054e3"
+active-border-foreground = "#ffffff"
+
+[controls]
+# Flat, 1px-outlined XP controls.
+normal-color        = "#000000"
+normal-fill-alpha   = 0.0
+normal-border       = "#003c74"
+normal-border-width = 1
+normal-border-alpha = 1.0
+
+hover-cursor-color        = "#ffffff"
+hover-cursor-fill-alpha   = 1.0
+hover-cursor-border       = "#003c74"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 1.0
+
+focus-color        = "#ffffff"
+focus-fill-alpha   = 1.0
+focus-border       = "#003c74"
+focus-border-width = 1
+focus-border-alpha = 1.0
+
+selected-color        = "#ffffff"
+selected-fill-alpha   = 1.0
+selected-border       = "#003c74"
+selected-border-width = 1
+selected-border-alpha = 1.0
+
+pressed-fill-alpha   = 1.0
+selection-fill-alpha = 1.0
+
+[spacing]
+# XP is dense: its menus use 3px padding and 19px rows at 96 DPI.
+scale = 0.85
+scale-with-font = false
+xxs             = 2
+xs              = 3
+sm              = 4
+md              = 5
+lg              = 7
+xl              = 9
+xxl             = 11
+xxxl            = 13
+huge            = 16
+control-gap     = 6
+control-height  = 22
+row-gap         = 1
+row-padding-x   = 8
+panel-padding   = 6
+popup-padding   = 5
+
+[font]
+# 11px is Tahoma 8pt at 96 DPI, the size Windows XP uses for nearly every
+# interface element.
+base-size = 11
+caption       = 9
+body-small    = 10
+body          = 11
+subtitle      = 11
+title         = 12
+heading       = 12
+display       = 20
+display-large = 24
+icon-small    = 12
+icon          = 14
+icon-large    = 16
+
+[popups]
+# Flyouts are XP dialogs: #ece9d8 face, 1px #003c74 border, square corners.
+background       = "#ece9d8"
+background-alpha = 1.0
+text             = "#000000"
+border           = "#003c74"
+border-alpha     = 1.0
+border-width     = 1
+
+[tooltip]
+background       = "#ffffe1"
+background-alpha = 1.0
+text             = "#000000"
+border           = "#000000"
+border-alpha     = 1.0
+border-width     = 1
+
+[notifications]
+# The XP balloon tip: pale yellow, black hairline border.
+background       = "#ffffe1"
+background-alpha = 1.0
+text             = "#000000"
+border           = "#000000"
+border-alpha     = 1.0
+border-width     = 1
+countdown        = "#316ac5"
+
+[launcher]
+background                = "#ffffff"
+background-alpha          = 1.0
+text                      = "#000000"
+border                    = "#003c74"
+border-alpha              = 1.0
+scrim                     = "#000000"
+scrim-alpha               = 0.25
+selected-background       = "#316ac5"
+selected-background-alpha = 1.0
+selected-text             = "#ffffff"
+selected-border           = "#003c74"
+selected-border-alpha     = 1.0
+
+[menu]
+# The Start menu body: white left pane, blue right pane, navy border.
+background                = "#ffffff"
+background-alpha          = 1.0
+text                      = "#000000"
+border                    = "#003c74"
+border-alpha              = 1.0
+border-width              = 1
+scrim                     = "#000000"
+scrim-alpha               = 0.25
+# The hover/selected row in XP is a solid navy block with white text.
+selected-background       = "#316ac5"
+selected-background-alpha = 1.0
+selected-text             = "#ffffff"
+selected-border           = "#316ac5"
+selected-border-alpha     = 1.0
+
+[polkit]
+background       = "#ece9d8"
+background-alpha = 1.0
+text             = "#000000"
+text-error       = "#cc0000"
+border           = "#003c74"
+border-error     = "#cc0000"
+border-alpha     = 1.0
+scrim            = "#000000"
+scrim-alpha      = 0.4
+accent           = "#316ac5"
+
+[lock]
+background       = "#ffffff"
+background-alpha = 0.9
+text             = "#000000"
+placeholder      = "#7f7f7f"
+text-error       = "#cc0000"
+border           = "#7f9db9"
+border-active    = "#316ac5"
+border-error     = "#cc0000"
+border-alpha     = 1.0
+selection        = "#316ac5"
+selection-alpha  = 0.4
+
+[image-picker]
+scrim                   = "#000000"
+scrim-alpha             = 0.4
+text                    = "#ffffff"
+selected-border         = "#316ac5"
+selected-border-alpha   = 1.0
+unselected-border       = "#ffffff"
+unselected-border-alpha = 0.4

@@ -1,0 +1,60 @@
+# Windows XP ("Luna" blue) palette for Omarchy.
+#
+# The taskbar, menu and control greys come from the Luna visual style; the
+# terminal and editor colours follow the Windows XP console defaults (black
+# background, silver text) so the shell stays usable. Every value is a plain
+# hex colour, which is what every Omarchy colour consumer expects.
+
+mode = "light"
+
+# Luna's selection blue and the darker "pressed" shade.
+accent = "#316ac5"
+selection = "#316ac5"
+muted = "#808080"
+
+# Window / dialog greys. #ece9d8 is the exact Luna dialog face colour.
+background = "#ece9d8"
+dark_background = "#d4d0c8"
+darker_background = "#aca899"
+lighter_background = "#ffffff"
+
+# Window text: near-black in dialogs, white is used on the blue surfaces.
+foreground = "#000000"
+dark_foreground = "#4a4a4a"
+light_foreground = "#1f1f1f"
+bright_foreground = "#000000"
+
+# XP's standard 16-colour accent set.
+red = "#e00000"
+yellow = "#ffd800"
+orange = "#ff8000"
+green = "#00a000"
+cyan = "#00a0a0"
+blue = "#0000ff"
+magenta = "#c000c0"
+brown = "#804000"
+
+bright_red = "#ff0000"
+bright_yellow = "#ffff00"
+bright_green = "#00ff00"
+bright_cyan = "#00ffff"
+bright_blue = "#4a90e2"
+bright_magenta = "#ff00ff"
+
+# --- Omarchy shell surfaces (Luna taskbar and Start menu) -------------------
+# These extra keys are read by the shell's own colour consumers and by the
+# templates in default/themed/, so the taskbar and Start menu can be painted
+# in Luna blue without touching any generated file by hand.
+
+taskbar = "#245edb"
+taskbar_light = "#3f8cf3"
+taskbar_dark = "#1941a5"
+taskbar_tray = "#0c59b9"
+start_button = "#3c8a2e"
+start_button_light = "#74b84e"
+start_button_dark = "#205a12"
+title_bar = "#0054e3"
+title_bar_inactive = "#7ba2e7"
+# The Start menu's two columns: white list on the left, blue panel on the right.
+start_menu_panel = "#d3e5fa"
+start_menu_panel_border = "#0b3d91"

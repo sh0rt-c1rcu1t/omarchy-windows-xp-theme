@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# Omarchy theme-set hook: remind the user that the Windows XP bar layout is
+# installed, and play the XP logon chime the first time the theme is applied.
+#
+# Installed as ~/.config/omarchy/hooks/theme-set.d/windows-xp-theme-set
+# by the theme's install.sh.
+
+set -euo pipefail
+
+theme="${1:-}"
+case "$theme" in
+*windows-xp* | *xp*) ;;
+*) exit 0 ;;
+esac
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
+STAMP="$STATE_DIR/windows-xp-theme-applied"
+SOUND_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/sounds/windows-xp/stereo"
+
+mkdir -p "$STATE_DIR"
+
+if [ ! -f "$STAMP" ]; then
+  : >"$STAMP"
+
+  # The first run has to restart the shell for the Windows XP Start button and
+  # menu plugins to be discovered, since a bar layout change is read at startup.
+  if command -v omarchy-notification-send >/dev/null 2>&1; then
+    omarchy-notification-send -u low "Windows XP theme applied" \
+      "Run 'omarchy restart shell' once so the Start button and Start menu load." || true
+  fi
+
+  SOUND_FILE="$SOUND_DIR/service-login.oga"
+  if [ -f "$SOUND_FILE" ]; then
+    (
+      sleep 1
+      if command -v paplay >/dev/null 2>&1; then
+        paplay "$SOUND_FILE" >/dev/null 2>&1
+      elif command -v pw-play >/dev/null 2>&1; then
+        pw-play "$SOUND_FILE" >/dev/null 2>&1
+      fi
+    ) &
+  fi
+fi
+
+exit 0

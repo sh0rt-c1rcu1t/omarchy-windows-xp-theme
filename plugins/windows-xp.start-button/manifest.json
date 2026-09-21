@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "windows-xp.start-button",
+  "name": "Windows XP Start button",
+  "version": "1.0.0",
+  "author": "Omarchy Windows XP theme",
+  "description": "The Luna green Start button, opening the Windows XP Start menu",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Start button",
+    "description": "Windows XP Start button",
+    "category": "Compositor",
+    "allowMultiple": false,
+    "defaultSection": "left",
+    "defaults": {
+      "menuPlugin": "windows-xp.start-menu"
+    },
+    "schema": [
+      {
+        "key": "menuPlugin",
+        "type": "string",
+        "label": "Start menu plugin id"
+      },
+      {
+        "key": "label",
+        "type": "string",
+        "label": "Button label"
+      }
+    ]
+  }
+}
