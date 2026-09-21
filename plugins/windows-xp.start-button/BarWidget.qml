@@ -1,6 +1,4 @@
 import QtQuick
-import qs.Commons
-import qs.Ui
 
 // The Windows XP "start" button.
 //
@@ -8,10 +6,24 @@ import qs.Ui
 // the four-pane Windows flag and the word "start" in bold italic. Pressing it
 // opens the Start menu; the whole button lightens while hovered, exactly as the
 // Luna visual style does.
-BarWidget {
+//
+// The root is a plain Item rather than the shell's `BarWidget` base so the
+// widget depends on nothing but QtQuick: the bar host injects `bar`,
+// `moduleName` and `settings` into any item that declares them, which is the
+// whole of the base class's contract that this button uses.
+Item {
   id: root
 
-  moduleName: "windows-xp.start-button"
+  // Injected by the bar host.
+  property QtObject bar: null
+  property string moduleName: "windows-xp.start-button"
+  property var settings: ({})
+
+  // Per-entry overrides, in the same shape the host's base class exposes.
+  function setting(name, fallback) {
+    var value = settings ? settings[name] : undefined
+    return value === undefined || value === null ? fallback : value
+  }
 
   // The menu plugin this button opens. Overridable per bar entry so a clone of
   // the button can point at a clone of the menu.
@@ -25,10 +37,16 @@ BarWidget {
   implicitWidth: buttonWidth
   implicitHeight: buttonHeight
 
+  // Single-quote a value for a shell command line. Plugin ids are restricted
+  // to [a-z0-9._+-], so quoting is belt and braces rather than load-bearing.
+  function shellQuote(value) {
+    return "'" + String(value).replace(/'/g, "'\\''") + "'"
+  }
+
   function toggleMenu() {
     if (!root.bar) return
     if (root.bar.hideTooltip) root.bar.hideTooltip(root)
-    root.bar.run("omarchy-shell shell toggle " + Util.shellQuote(root.menuPlugin) + " '{}'")
+    root.bar.run("omarchy-shell shell toggle " + root.shellQuote(root.menuPlugin) + " '{}'")
   }
 
   Item {
@@ -90,7 +108,8 @@ BarWidget {
           text: root.label
           color: "#ffffff"
           font.family: "Tahoma"
-          font.pixelSize: Style.font.subtitle
+          // 11px is Tahoma 8pt at 96 DPI: the size Windows XP draws "start" at.
+          font.pixelSize: 11
           font.bold: true
           font.italic: true
           style: Text.Raised

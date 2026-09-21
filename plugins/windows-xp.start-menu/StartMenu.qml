@@ -3,7 +3,6 @@ import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
 
 // Windows XP Start menu, drawn from xp-menu.json.
 //
@@ -52,6 +51,9 @@ Item {
   readonly property int rowHeight: 22
   readonly property int submenuWidth: 234
   readonly property int maxBodyHeight: 520
+  // The search row: XP-era menus have none, so it is only present when the
+  // shell handed us an application library to search.
+  readonly property int searchHeight: 24
 
   readonly property string menuFont: "Tahoma"
   readonly property color headerTop: "#1868d8"
@@ -72,8 +74,13 @@ Item {
   property string query: ""
 
   readonly property bool searching: query.length > 0
-  property int measuredBodyHeight: 200
-  readonly property int bodyHeight: Math.min(Math.max(measuredBodyHeight, 120), maxBodyHeight)
+
+  // The card is exactly as tall as its content: the body takes the taller
+  // column's natural height, so no row is ever clipped. `measuredBodyHeight`
+  // is a reading of the laid-out columns, not an input to them, which is what
+  // keeps the two from feeding each other.
+  property int measuredBodyHeight: 0
+  readonly property int bodyHeight: measuredBodyHeight > 0 ? measuredBodyHeight : 140
   readonly property int menuHeight: headerHeight + footerHeight + bodyHeight + 2
 
   // ------------------------------------------------- plugin lifecycle
@@ -358,6 +365,14 @@ Item {
                 }
               }
 
+              // The search field occupies a row of the flow; the visible input
+              // is drawn by `searchField` in the window above, which is
+              // positioned to land exactly on this spacer.
+              Item {
+                width: parent.width
+                height: root.searchHeight
+              }
+
               Repeater {
                 model: root.filteredApps
 
@@ -500,10 +515,11 @@ Item {
     // the input item so focus and Escape work regardless of the row state.
     Item {
       id: searchPlate
-      x: 5
-      y: root.headerHeight + 3
-      width: root.leftWidth - 10
-      height: root.appRows.length > 0 ? 24 : 0
+      // One row below the pinned items, inside the card's own padding.
+      x: 6
+      y: 1 + root.headerHeight + 4 + root.pinned.length * root.rowHeight + 1
+      width: root.leftWidth - 12
+      height: root.searchHeight - 4
       visible: height > 0
 
       Rectangle {
@@ -652,11 +668,12 @@ Item {
   }
 
   // The card grows to fit whichever column ends up taller, capped so a long
-  // application list cannot swallow the screen.
+  // application list cannot swallow the screen. The columns' implicit heights
+  // are read after layout, and the body is what those readings produce.
   function measure() {
-    var left = leftFlow ? leftFlow.implicitHeight + 10 : 0
-    var right = rightFlow ? rightFlow.implicitHeight + 10 : 0
-    measuredBodyHeight = Math.max(left, right)
+    var left = leftFlow ? leftFlow.implicitHeight : 0
+    var right = rightFlow ? rightFlow.implicitHeight : 0
+    measuredBodyHeight = Math.max(left, right, 140)
   }
 
   Connections {
