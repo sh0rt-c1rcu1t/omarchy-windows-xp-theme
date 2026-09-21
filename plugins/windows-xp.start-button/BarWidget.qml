@@ -3,7 +3,7 @@ import QtQuick
 // The Windows XP "start" button.
 //
 // Lunas draws it as a 100x30 green lozenge with a soft highlight across the top,
-// the four-pane Windows flag and the word "start" in bold italic. Pressing it
+// the four-pane Windows flag and the word "start" in bold. Pressing it
 // opens the Start menu; the whole button lightens while hovered, exactly as the
 // Luna visual style does.
 //
@@ -107,11 +107,12 @@ Item {
           anchors.verticalCenter: parent.verticalCenter
           text: root.label
           color: "#ffffff"
+          // Luna sets "start" in Franklin Gothic, a heavy condensed sans. It is
+          // not available on Linux and Tahoma ships no italic face, so the
+          // closest honest approximation is Tahoma in bold at 8pt: 11px.
           font.family: "Tahoma"
-          // 11px is Tahoma 8pt at 96 DPI: the size Windows XP draws "start" at.
           font.pixelSize: 11
           font.bold: true
-          font.italic: true
           style: Text.Raised
           styleColor: "#1d4a14"
         }

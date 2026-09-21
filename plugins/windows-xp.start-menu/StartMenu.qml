@@ -552,8 +552,9 @@ Item {
           text: "Search programs"
           color: "#808080"
           font.family: root.menuFont
+          // No italic: Tahoma ships no italic face, so asking for one would
+          // silently render upright anyway.
           font.pixelSize: 11
-          font.italic: true
         }
       }
     }
