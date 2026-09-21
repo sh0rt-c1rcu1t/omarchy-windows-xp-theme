@@ -282,6 +282,9 @@ install_hyprland() {
 
 apply_theme() {
   step "Applying the theme"
+  # Clear the first-run stamp so a fresh install sees the setup notice again.
+  rm -f "${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/windows-xp-theme-applied"
+
   version=$(omarchy version 2>/dev/null || echo "?")
   step "  omarchy $version"
 
