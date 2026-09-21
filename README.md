@@ -127,15 +127,48 @@ it opens.
 
 ## Wallpaper
 
-`backgrounds/` holds five wallpapers generated procedurally by
-`tools/generate-wallpapers.py` — a rolling green hill under a blue sky, plus Azul,
-Autumn, Red Moon Desert and Wind in the same spirit. They are original
-renderings, not copies of Microsoft's photographs.
+`backgrounds/` holds five wallpapers rendered by
+`tools/generate-wallpapers.py`: the default rolling green hill under a deep blue
+sky, plus Azul, Autumn, Red Moon Desert and Wind. They are original renderings,
+not copies of Microsoft's photograph.
+
+They are 3840x2160 and rendered with fractal detail down to the pixel, so they
+stay sharp on a high-resolution display. Rendering uses **spectral synthesis** —
+white noise shaped by a power-law spectrum in the frequency domain — rather than
+interpolating a coarse grid, which is what the first version did and why it
+looked soft.
 
 ```bash
-python3 tools/generate-wallpapers.py backgrounds   # regenerate
-omarchy theme bg next                              # cycle them
+python3 tools/generate-wallpapers.py backgrounds --size 3840x2160   # regenerate
+python3 tools/generate-wallpapers.py /tmp/w --only 1-bliss --format png
+omarchy theme bg next                                               # cycle them
 ```
+
+### Using the genuine Bliss photograph
+
+Microsoft's *Bliss* — Charles O'Rear's 1996 photograph of a hill in Sonoma
+County — is copyrighted and is **not** redistributed here. If you have a
+high-resolution copy (from a Windows XP installation you are licensed for, or
+from [Microsoft's own 4K release](https://learn.microsoft.com/en-us/answers/questions/586619/)),
+point the helper at it and it becomes the theme's default background, taking
+precedence over the rendered ones:
+
+```bash
+scripts/install-wallpaper.sh ~/Downloads/bliss-4k.jpg     # local file
+scripts/install-wallpaper.sh https://example.com/bliss.jpg # or a URL
+scripts/install-wallpaper.sh                              # back to the rendered set
+```
+
+It rescales the image to your monitor's exact resolution, so the compositor
+never has to upscale it.
+
+### The wallpaper is pinned
+
+Applying a theme makes Omarchy cycle through the theme's backgrounds, so the
+desktop could come up on Azul instead of the default hill. The theme's
+`theme-set` hook re-points the background at `1-bliss.jpg` (or at
+`0-bliss-original.png` when `install-wallpaper.sh` has stored your own copy),
+which is why re-applying the theme no longer changes the wallpaper.
 
 ## Sounds
 
