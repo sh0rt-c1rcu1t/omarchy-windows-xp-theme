@@ -132,8 +132,10 @@ it opens.
 sky, plus Azul, Autumn, Red Moon Desert and Wind. They are original renderings,
 not copies of Microsoft's photograph.
 
-They are 3840x2160 and rendered with fractal detail down to the pixel, so they
-stay sharp on a high-resolution display. Rendering uses **spectral synthesis** —
+The rendered hill, Azul, Autumn, Red Moon Desert and Wind are 3840x2160 and
+carry fractal detail down to the pixel, so they stay sharp on a high-resolution
+display. `0-bliss-original.png` is the photograph itself (see below) and takes
+precedence as the default background. Rendering uses **spectral synthesis** —
 white noise shaped by a power-law spectrum in the frequency domain — rather than
 interpolating a coarse grid, which is what the first version did and why it
 looked soft.
@@ -146,12 +148,15 @@ omarchy theme bg next                                               # cycle them
 
 ### Using the genuine Bliss photograph
 
-Microsoft's *Bliss* — Charles O'Rear's 1996 photograph of a hill in Sonoma
-County — is copyrighted and is **not** redistributed here. If you have a
-high-resolution copy (from a Windows XP installation you are licensed for, or
-from [Microsoft's own 4K release](https://learn.microsoft.com/en-us/answers/questions/586619/)),
-point the helper at it and it becomes the theme's default background, taking
-precedence over the rendered ones:
+`backgrounds/0-bliss-original.png` **is** the real Bliss — Charles O'Rear's 1996
+photograph of a hill in Sonoma County — fitted to this theme's target resolution
+by a centre crop, at 2560x1440.
+
+A warning that matters if you are publishing this repository: that photograph is
+Microsoft's, so redistributing it is a licensing question, not a technical one.
+The file is included because it produces the authentic desktop; **delete it
+before pushing publicly** if you would rather not carry that, and the theme
+falls back to the rendered hill. To install your own copy instead:
 
 ```bash
 scripts/install-wallpaper.sh ~/Downloads/bliss-4k.jpg     # local file
@@ -159,8 +164,10 @@ scripts/install-wallpaper.sh https://example.com/bliss.jpg # or a URL
 scripts/install-wallpaper.sh                              # back to the rendered set
 ```
 
-It rescales the image to your monitor's exact resolution, so the compositor
-never has to upscale it.
+It rescales the image to your monitor's exact resolution and centre-crops it to
+your screen's aspect ratio — the same `PreserveAspectCrop` treatment the
+compositor applies — so nothing is ever upscaled and the framing is settled
+before it reaches the compositor.
 
 ### The wallpaper is pinned
 
