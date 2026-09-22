@@ -237,6 +237,15 @@ Item {
       .replace(/,(\s*[}\]])/g, "$1")
   }
 
+  // Escape closes the menu: the keyboard half of "clicking outside closes it".
+  // A Shortcut rather than a Key handler on one item, so it works wherever focus
+  // happens to be inside the menu.
+  Shortcut {
+    enabled: root.opened
+    sequence: "Escape"
+    onActivated: root.hideMenu()
+  }
+
   FileView {
     id: definitionFile
     path: root.definitionPath
@@ -561,21 +570,22 @@ Item {
   }
 
   // --------------------------------------------------- click-away layer
-  // Windows XP closes the Start menu when you click the desktop. This is a
-  // transparent surface covering everything except the menu itself, so a click
-  // outside dismisses it. It is deliberately the lowest of the overlay windows
-  // the menu owns, which keeps it behind the menu and the fly-outs.
+  // Windows XP closes the Start menu when you click anywhere else, so a click
+  // outside it has to be caught. This is a full-screen transparent surface
+  // beneath the menu: the menu window and its fly-outs are separate surfaces on
+  // the same layer, created later, so they sit above this one and keep their
+  // own clicks.
+  //
+  // It deliberately does NOT try to spare the menu's rectangle with margins.
+  // Anchoring to both `bottom` and a bottom margin is contradictory -- the
+  // surface comes out neither full-height nor offset -- which is what left the
+  // first version as a 804x412 corner that swallowed no clicks at all.
   PanelWindow {
     id: dismissLayer
 
     visible: root.opened
     screen: menuWindow.screen
     anchors { top: true; left: true; right: true; bottom: true }
-    margins {
-      bottom: root.menuHeight + root.barHeight()
-      // Leave room for a fly-out that folds out to the right of the menu.
-      left: root.menuWidth
-    }
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.namespace: "omarchy-start-menu-dismiss"
@@ -584,6 +594,7 @@ Item {
 
     MouseArea {
       anchors.fill: parent
+      acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
       onClicked: root.hideMenu()
     }
   }
