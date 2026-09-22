@@ -35,9 +35,17 @@ a folder or command that exists on a stock Omarchy system.
 ## Install
 
 ```bash
-git clone https://github.com/<you>/omarchy-windows-xp-theme.git
+git clone https://github.com/sh0rt-c1rcu1t/omarchy-windows-xp-theme.git
 cd omarchy-windows-xp-theme
 ./install.sh
+```
+
+The repository does not contain the Bliss photograph (see
+[Wallpaper](#wallpaper) for why), so a fresh clone comes up on the rendered
+stand-in. Add the real image afterwards with:
+
+```bash
+scripts/install-wallpaper.sh /path/to/your/bliss.jpg
 ```
 
 `install.sh` applies the theme and restarts the Omarchy shell. Everything is
