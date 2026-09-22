@@ -25,6 +25,7 @@ BACKGROUNDS_DIR="$THEME_DIR/backgrounds"
 CURRENT_BG="$HOME/.local/state/omarchy/current/background"
 
 step() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+warn() { printf '\033[1;33m warn\033[0m %s\n' "$*" >&2; }
 fail() {
   printf '\033[1;31merror\033[0m %s\n' "$*" >&2
   exit 1
@@ -39,7 +40,7 @@ restore() {
   for candidate in "$BACKGROUNDS_DIR"/0-bliss-original.* "$BACKGROUNDS_DIR"/1-bliss.*; do
     [[ -f $candidate ]] || continue
     step "Restoring the theme's own wallpaper: $(basename "$candidate")"
-    ln -nsf "$(readlink -f "$candidate")" "$CURRENT_BG"
+    apply_background "$candidate"
     return
   done
 
@@ -48,7 +49,17 @@ restore() {
     -print 2>/dev/null | sort | head -1)
   [[ -n $candidate ]] || fail "no wallpapers found in $BACKGROUNDS_DIR"
   step "Restoring $(basename "$candidate")"
-  ln -nsf "$(readlink -f "$candidate")" "$CURRENT_BG"
+  apply_background "$candidate"
+}
+
+# Point the shell at a background and make it repaint now.
+apply_background() {
+  local image="$1"
+  if command -v omarchy-theme-bg-set >/dev/null 2>&1; then
+    omarchy-theme-bg-set "$image" >/dev/null
+  else
+    ln -nsf "$(readlink -f "$image")" "$CURRENT_BG"
+  fi
 }
 
 set_wallpaper() {
@@ -68,22 +79,40 @@ set_wallpaper() {
     fi
   fi
 
-  # Normalise to PNG at the display's aspect ratio so the compositor never has
-  # to scale it up, which is what makes a small wallpaper look soft.
-  local width height
-  width=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].width // empty')
-  height=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].height // empty')
-  if [[ -n $width && -n $height ]] && command -v magick >/dev/null; then
-    step "Fitting to ${width}x${height}"
-    magick "$target.tmp" -resize "${width}x${height}^" -gravity center \
-      -extent "${width}x${height}" -strip -define png:compression-level=6 "$target"
+  # Fit to the monitor's LOGICAL size, not its physical one.
+  #
+  # Hyprland reports physical pixels and a scale factor: a 2400x1600 panel at
+  # scale 2 is a 1200x800 desktop, and that logical size is what layer surfaces
+  # are laid out in. Fitting to the physical size instead produces an image of
+  # the wrong aspect ratio, which the compositor then crops and magnifies by the
+  # scale factor -- which is exactly what makes a wallpaper look soft.
+  #
+  # Matching the logical size means the compositor scales it up by an integer
+  # factor, so one pixel of the image lands on exactly one physical pixel.
+  local logical_width logical_height
+  logical_width=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0] | (.width / (.scale // 1)) | floor // empty')
+  logical_height=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0] | (.height / (.scale // 1)) | floor // empty')
+
+  if [[ -n $logical_width && -n $logical_height ]] && command -v magick >/dev/null; then
+    step "Fitting to the logical desktop ${logical_width}x${logical_height}"
+    magick "$target.tmp" -resize "${logical_width}x${logical_height}^" -gravity center \
+      -extent "${logical_width}x${logical_height}" -strip -define png:compression-level=9 "$target"
     rm -f "$target.tmp"
   else
+    warn "no running Hyprland session; storing the image unscaled"
     mv "$target.tmp" "$target"
   fi
 
   step "Installed $(basename "$target") ($(magick identify -format '%wx%h' "$target" 2>/dev/null || echo '?'))"
-  ln -nsf "$target" "$CURRENT_BG"
+
+  # `omarchy theme bg set` writes the symlink AND pushes the new image to the
+  # running shell. Writing the symlink alone leaves the old wallpaper on screen
+  # until something else happens to make the shell re-read it.
+  if command -v omarchy-theme-bg-set >/dev/null 2>&1; then
+    omarchy-theme-bg-set "$target" >/dev/null
+  else
+    ln -nsf "$target" "$CURRENT_BG"
+  fi
   step "Applied as the current background"
 
   cat <<EOF

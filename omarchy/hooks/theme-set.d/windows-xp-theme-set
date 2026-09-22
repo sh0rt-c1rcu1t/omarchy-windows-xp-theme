@@ -23,14 +23,26 @@ mkdir -p "$STATE_DIR"
 # Pin the default wallpaper. Applying a theme makes Omarchy pick a background
 # from the theme's directory, and the picker cycles: without this the desktop
 # can come up on one of the alternative wallpapers instead of the default.
-BACKGROUNDS="$HOME/.config/omarchy/themes/windows-xp/backgrounds"
-CURRENT_BG="$HOME/.local/state/omarchy/current/background"
+#
 # 0-bliss-original is the file scripts/install-wallpaper.sh writes when the
-# user supplies their own copy of the photograph; it wins when present.
+# photograph itself is available; it wins when present.
+BACKGROUNDS="$HOME/.config/omarchy/themes/windows-xp/backgrounds"
+CHOSEN=""
 if [ -f "$BACKGROUNDS/0-bliss-original.png" ]; then
-  ln -nsf "$BACKGROUNDS/0-bliss-original.png" "$CURRENT_BG"
+  CHOSEN="$BACKGROUNDS/0-bliss-original.png"
 elif [ -f "$BACKGROUNDS/1-bliss.jpg" ]; then
-  ln -nsf "$BACKGROUNDS/1-bliss.jpg" "$CURRENT_BG"
+  CHOSEN="$BACKGROUNDS/1-bliss.jpg"
+fi
+
+# `omarchy theme bg set` writes the symlink and pushes the image to the running
+# shell. Writing the symlink alone leaves whatever the theme picker chose on
+# screen, which is why re-applying a theme used to leave the wrong wallpaper up.
+if [ -n "$CHOSEN" ]; then
+  if command -v omarchy-theme-bg-set >/dev/null 2>&1; then
+    omarchy-theme-bg-set "$CHOSEN" >/dev/null 2>&1 || true
+  else
+    ln -nsf "$CHOSEN" "$HOME/.local/state/omarchy/current/background"
+  fi
 fi
 
 if [ ! -f "$STAMP" ]; then

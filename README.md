@@ -149,8 +149,15 @@ omarchy theme bg next                                               # cycle them
 ### Using the genuine Bliss photograph
 
 `backgrounds/0-bliss-original.png` **is** the real Bliss — Charles O'Rear's 1996
-photograph of a hill in Sonoma County — fitted to this theme's target resolution
-by a centre crop, at 2560x1440.
+photograph of a hill in Sonoma County — fitted by a centre crop.
+
+It is fitted to the **logical** desktop size, not the physical panel size. On a
+HiDPI display those differ: a 2400x1600 panel at scale 2 is a 1200x800 desktop,
+and layer surfaces are laid out in that smaller space. Fitting to the physical
+size instead yields the wrong aspect ratio, which the compositor crops and then
+magnifies by the scale factor — the surest way to make a wallpaper look soft.
+`scripts/install-wallpaper.sh` now derives the logical size itself, so re-running
+it on a different display refits the image correctly.
 
 A warning that matters if you are publishing this repository: that photograph is
 Microsoft's, so redistributing it is a licensing question, not a technical one.
