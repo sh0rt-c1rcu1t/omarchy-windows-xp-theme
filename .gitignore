@@ -9,3 +9,11 @@ __pycache__/
 # Scratch output from the generator tools.
 /tmp/
 /out/
+
+# The genuine Bliss photograph is Microsoft-licensed and is Charles O'Rear's
+# copyright, unlike every other file in this theme. It is kept out of version
+# control by default so that cloning and publishing this repository never
+# carries it; scripts/install-wallpaper.sh puts a copy here locally.
+#
+# Delete this line if you have decided you are happy to publish it.
+backgrounds/0-bliss-original.png
