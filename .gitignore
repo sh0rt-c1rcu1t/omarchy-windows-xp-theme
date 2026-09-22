@@ -10,10 +10,14 @@ __pycache__/
 /tmp/
 /out/
 
-# The genuine Bliss photograph is Microsoft-licensed and is Charles O'Rear's
-# copyright, unlike every other file in this theme. It is kept out of version
-# control by default so that cloning and publishing this repository never
-# carries it; scripts/install-wallpaper.sh puts a copy here locally.
+# The genuine Bliss photograph is Charles O'Rear's copyright, licensed to
+# Microsoft, and is the only file here that is not original work. It is kept out
+# of version control so that cloning and publishing this repository never
+# carries it.
 #
-# Delete this line if you have decided you are happy to publish it.
+# backgrounds/1-bliss.jpg is the tracked stand-in: the theme-set hook falls back
+# to it, so a fresh clone still gets a sharp wallpaper, and
+# scripts/install-wallpaper.sh puts the real photograph here at full quality.
+#
+# Delete this line if you have decided you are happy to publish the photograph.
 backgrounds/0-bliss-original.png

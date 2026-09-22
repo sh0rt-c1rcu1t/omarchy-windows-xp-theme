@@ -127,24 +127,36 @@ it opens.
 
 ## Wallpaper
 
-`backgrounds/` holds five wallpapers rendered by
-`tools/generate-wallpapers.py`: the default rolling green hill under a deep blue
-sky, plus Azul, Autumn, Red Moon Desert and Wind. They are original renderings,
-not copies of Microsoft's photograph.
+`backgrounds/0-bliss-original.png` is the wallpaper: the real Bliss photograph,
+centre-cropped to the logical desktop size. It is the only image the theme ships
+that the background picker will offer — a theme with a single background cannot
+surprise you by cycling to something else when a bar gesture or a theme re-apply
+goes through Omarchy's picker.
 
-The rendered hill, Azul, Autumn, Red Moon Desert and Wind are 3840x2160 and
-carry fractal detail down to the pixel, so they stay sharp on a high-resolution
-display. `0-bliss-original.png` is the photograph itself (see below) and takes
-precedence as the default background. Rendering uses **spectral synthesis** —
-white noise shaped by a power-law spectrum in the frequency domain — rather than
-interpolating a coarse grid, which is what the first version did and why it
-looked soft.
+`backgrounds/1-bliss.jpg` is a rendered stand-in, used only if the photograph is
+not present (a fresh clone, since the photograph is kept out of version control).
+It is named `1-` rather than `0-` so the photograph always wins.
 
 ```bash
-python3 tools/generate-wallpapers.py backgrounds --size 3840x2160   # regenerate
-python3 tools/generate-wallpapers.py /tmp/w --only 1-bliss --format png
-omarchy theme bg next                                               # cycle them
+scripts/install-wallpaper.sh                    # re-apply it
+scripts/install-wallpaper.sh ~/other-image.jpg  # use a different image instead
 ```
+
+### Regenerating alternatives
+
+`tools/generate-wallpapers.py` renders a five-image set in the same spirit —
+the hill, Azul, Autumn, Red Moon Desert and Wind — with fractal detail down to
+the pixel. They are not shipped, because the photograph is better and because
+extra backgrounds are what made the picker drift in the first place. Render them
+into a scratch directory if you want them:
+
+```bash
+python3 tools/generate-wallpapers.py /tmp/xp-walls --size 3840x2160
+```
+
+Note that the generator renders **one** default composition; the photograph is
+fitted to your screen by `install-wallpaper.sh`, which is what keeps it sharp on
+a HiDPI display.
 
 ### Using the genuine Bliss photograph
 

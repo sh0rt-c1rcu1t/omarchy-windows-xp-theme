@@ -75,19 +75,19 @@
   // with "xp-" keeps them from colliding with Omarchy's own ids.
   "xp-my-documents": {
     "label": "My Documents",
-    "action": "omarchy-launch-nautilus \"$HOME/Documents\""
+    "action": "omarchy-xp-open-folder xdg:DOCUMENTS"
   },
   "xp-my-pictures": {
     "label": "My Pictures",
-    "action": "omarchy-launch-nautilus \"$HOME/Pictures\""
+    "action": "omarchy-xp-open-folder xdg:PICTURES"
   },
   "xp-my-music": {
     "label": "My Music",
-    "action": "omarchy-launch-nautilus \"$HOME/Music\""
+    "action": "omarchy-xp-open-folder xdg:MUSIC"
   },
   "xp-my-videos": {
     "label": "My Videos",
-    "action": "omarchy-launch-nautilus \"$HOME/Videos\""
+    "action": "omarchy-xp-open-folder xdg:VIDEOS"
   },
   "xp-my-computer": {
     "label": "My Computer",
@@ -95,11 +95,11 @@
   },
   "xp-my-computer.disk": {
     "label": "Local Disk (C:)",
-    "action": "omarchy-launch-nautilus /"
+    "action": "omarchy-xp-open-folder root"
   },
   "xp-my-computer.home": {
     "label": "Local Disk (D:)",
-    "action": "omarchy-launch-nautilus \"$HOME\""
+    "action": "omarchy-xp-open-folder home"
   },
   "xp-my-computer.overview": {
     "label": "View System Information",
@@ -107,15 +107,15 @@
   },
   "xp-my-computer.removable": {
     "label": "Devices with Removable Storage",
-    "action": "omarchy-launch-nautilus /run/media/$USER"
+    "action": "omarchy-xp-open-folder removable"
   },
   "xp-my-computer.shared": {
     "label": "Shared Documents",
-    "action": "omarchy-launch-nautilus \"$HOME/Public\""
+    "action": "omarchy-xp-open-folder xdg:PUBLIC"
   },
   "xp-my-computer.recycle-bin": {
     "label": "Recycle Bin",
-    "action": "omarchy-launch-nautilus trash://"
+    "action": "omarchy-xp-open-folder trash"
   },
   "xp-my-network-places": {
     "label": "My Network Places",

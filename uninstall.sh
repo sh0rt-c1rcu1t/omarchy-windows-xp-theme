@@ -45,6 +45,11 @@ step "Removing the shell plugins"
 rm -rf "$OMARCHY_CONFIG/plugins/windows-xp.start-button" \
   "$OMARCHY_CONFIG/plugins/windows-xp.start-menu"
 
+step "Removing the folder opener"
+if [ -f "$HOME/.local/bin/omarchy-xp-open-folder" ]; then
+  rm -f "$HOME/.local/bin/omarchy-xp-open-folder"
+fi
+
 step "Removing the hooks"
 rm -f "$OMARCHY_CONFIG/hooks/post-boot.d/windows-xp-startup-sound" \
   "$OMARCHY_CONFIG/hooks/theme-set.d/windows-xp-theme-set"

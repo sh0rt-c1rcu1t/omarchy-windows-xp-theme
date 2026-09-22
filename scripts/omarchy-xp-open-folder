@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+#
+# Open a folder in the file manager, at that exact folder.
+#
+#   omarchy-xp-open-folder [TARGET] [ARG]
+#
+# TARGET names what to open; a bare path works too:
+#
+#   TARGET                 opens
+#   (empty)                the home folder
+#   <path>                 that path
+#   xdg:PICTURES           the XDG Pictures folder, wherever it lives
+#   xdg:MUSIC, xdg:VIDEOS, xdg:DOCUMENTS, xdg:DOWNLOAD
+#   root                   the filesystem root
+#   trash                  the trash
+#   removable              the removable-media mount point
+#
+# Why this exists: Omarchy's own `omarchy-launch-nautilus` takes no arguments --
+# it runs `nautilus --new-window` and nothing else -- so an action that appends a
+# path to it silently opens the home folder instead. Omarchy also does not
+# require Documents/Pictures/Music to exist or to sit in the home directory, so
+# the names are resolved through `xdg-user-dir` rather than hardcoded, and a
+# missing folder falls back to something that does exist rather than opening an
+# empty error window.
+
+set -euo pipefail
+
+TARGET="${1:-}"
+ARG="${2:-}"
+
+# Expand a leading ~ or an embedded $HOME, since a path may arrive from a JSON
+# action string written by hand.
+expand() {
+  local value="${1/#\~/$HOME}"
+  value="${value//\$HOME/$HOME}"
+  printf '%s' "$value"
+}
+
+resolve() {
+  case "$TARGET" in
+  "" | home | xdg:HOME)
+    printf '%s' "$HOME"
+    ;;
+  root | filesystem)
+    printf '/'
+    ;;
+  trash)
+    printf 'trash://'
+    ;;
+  xdg:*)
+    local key="${TARGET#xdg:}" dir
+    if command -v xdg-user-dir >/dev/null 2>&1; then
+      dir=$(xdg-user-dir "$key" 2>/dev/null || true)
+    fi
+    # xdg-user-dir echoes the home directory when a folder is not configured,
+    # which is a fine place to land; anything empty falls back to home too.
+    [[ -n $dir ]] || dir="$HOME"
+    printf '%s' "$dir"
+    ;;
+  removable)
+    # Where udisks2 mounts removable media. With nothing plugged in the
+    # directory may not exist yet, so fall back to the home folder.
+    for candidate in "/run/media/$USER" "/media/$USER" "/run/media/$ARG"; do
+      if [[ -d $candidate ]]; then
+        printf '%s' "$candidate"
+        return
+      fi
+    done
+    printf '%s' "$HOME"
+    ;;
+  *)
+    printf '%s' "$(expand "$TARGET")"
+    ;;
+  esac
+}
+
+LOCATION=$(resolve)
+
+# A target that does not exist opens the nearest thing that does, rather than
+# landing the user in an empty folder with an error bar.
+if [[ $LOCATION != trash://* && ! -e $LOCATION ]]; then
+  # Walk up until something exists, so ~/Pictures/2024 opens ~/Pictures when the
+  # year folder is empty.
+  candidate="$LOCATION"
+  while [[ $candidate != / && ! -e $candidate ]]; do
+    candidate=$(dirname "$candidate")
+  done
+  LOCATION="$candidate"
+fi
+
+# --new-window so a click always lands on the folder that was clicked, instead
+# of reusing whatever window is already open on a different folder.
+if command -v nautilus >/dev/null 2>&1; then
+  if command -v uwsm-app >/dev/null 2>&1; then
+    exec setsid uwsm-app -- nautilus --new-window "$LOCATION"
+  fi
+  exec setsid nautilus --new-window "$LOCATION"
+fi
+
+# Other file managers, for systems where nautilus is not installed.
+for manager in nemo dolphin thunar pcmanfm; do
+  if command -v "$manager" >/dev/null 2>&1; then
+    exec setsid "$manager" "$LOCATION"
+  fi
+done
+
+# Last resort: let the desktop's default handler decide.
+exec setsid xdg-open "$LOCATION"

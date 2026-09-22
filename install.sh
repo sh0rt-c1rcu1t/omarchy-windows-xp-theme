@@ -189,6 +189,24 @@ install_menu_extensions() {
   step "  installed $target"
 }
 
+install_action_scripts() {
+  step "Installing the folder opener used by the Start menu rows"
+  local bin_dir="$HOME/.local/bin"
+  mkdir -p "$bin_dir"
+  install -m 0755 "$REPO_DIR/scripts/omarchy-xp-open-folder" "$bin_dir/omarchy-xp-open-folder"
+  step "  $bin_dir/omarchy-xp-open-folder"
+
+  # The menu actions call it by bare name, so ~/.local/bin has to be on PATH.
+  # Omarchy's own setup puts it there; say so when something else removed it.
+  case ":$PATH:" in
+  *":$bin_dir:"*) ;;
+  *)
+    warn "  $bin_dir is not on PATH; the folder menu rows will not resolve it"
+    warn "  add this to your shell profile:  export PATH=\"\$HOME/.local/bin:\$PATH\""
+    ;;
+  esac
+}
+
 install_sounds() {
   step "Installing the Windows XP sound scheme"
   mkdir -p "$SOUND_DIR/stereo"
@@ -315,6 +333,7 @@ $(printf '\033[1;32mWindows XP theme installed.\033[0m')
   Start button windows-xp.start-button   (left end of the taskbar)
   Start menu   windows-xp.start-menu     (opened by the Start button)
   Menu labels  $OMARCHY_CONFIG/extensions/omarchy-menu.jsonc
+  Folder opener ~/.local/bin/omarchy-xp-open-folder
   Sounds       $SOUND_DIR
 
 Try it:
@@ -334,6 +353,7 @@ main() {
   preflight
   install_theme
   install_plugins
+  install_action_scripts
   install_menu_extensions
   install_sounds
   install_hooks

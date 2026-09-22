@@ -50,13 +50,13 @@
       "id": "my-pictures",
       "label": "My Pictures",
       "icon": "my-pictures",
-      "action": "omarchy-launch-nautilus @HOME@/Pictures"
+      "action": "omarchy-xp-open-folder xdg:PICTURES"
     },
     {
       "id": "my-music",
       "label": "My Music",
       "icon": "my-music",
-      "action": "omarchy-launch-nautilus @HOME@/Music"
+      "action": "omarchy-xp-open-folder xdg:MUSIC"
     },
     {
       "id": "my-computer",
@@ -73,31 +73,31 @@
           "id": "my-computer.files",
           "label": "Files Stored on This Computer",
           "icon": "folder-open",
-          "action": "omarchy-launch-nautilus @HOME@"
+          "action": "omarchy-xp-open-folder home"
         },
         {
           "id": "my-computer.disk",
           "label": "Local Disk (C:)",
           "icon": "hard-drive",
-          "action": "omarchy-launch-nautilus /"
+          "action": "omarchy-xp-open-folder root"
         },
         {
           "id": "my-computer.home",
           "label": "Local Disk (D:)",
           "icon": "hard-drive",
-          "action": "omarchy-launch-nautilus @HOME@"
+          "action": "omarchy-xp-open-folder home"
         },
         {
           "id": "my-computer.removable",
           "label": "Devices with Removable Storage",
           "icon": "removable",
-          "action": "omarchy-launch-nautilus /run/media/$USER"
+          "action": "omarchy-xp-open-folder removable"
         },
         {
           "id": "my-computer.shared",
           "label": "Shared Documents",
           "icon": "shared-folder",
-          "action": "omarchy-launch-nautilus @HOME@/Public"
+          "action": "omarchy-xp-open-folder xdg:PUBLIC"
         }
       ]
     },
@@ -214,7 +214,7 @@
       "label": "My Documents",
       "icon": "my-documents",
       "bold": true,
-      "action": "omarchy-launch-nautilus @HOME@/Documents"
+      "action": "omarchy-xp-open-folder xdg:DOCUMENTS"
     },
     {
       "id": "right.recent",
@@ -226,20 +226,20 @@
       "id": "right.pictures",
       "label": "My Pictures",
       "icon": "my-pictures",
-      "action": "omarchy-launch-nautilus @HOME@/Pictures"
+      "action": "omarchy-xp-open-folder xdg:PICTURES"
     },
     {
       "id": "right.music",
       "label": "My Music",
       "icon": "my-music",
-      "action": "omarchy-launch-nautilus @HOME@/Music"
+      "action": "omarchy-xp-open-folder xdg:MUSIC"
     },
     {
       "id": "right.computer",
       "label": "My Computer",
       "icon": "my-computer",
       "bold": true,
-      "action": "omarchy-launch-nautilus /"
+      "action": "omarchy-xp-open-folder root"
     },
     {
       "id": "right.network-places",
