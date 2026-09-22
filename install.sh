@@ -294,7 +294,13 @@ install_hooks() {
 
 install_bar_layout() {
   step "Putting the Start button on the taskbar"
-  bash "$REPO_DIR/scripts/install-shell.sh" --bar bottom
+  # Not fatal: everything else is already installed, and the bar can be set up
+  # afterwards. Aborting here used to leave the caller thinking the whole
+  # install failed when only the bar layout was missing.
+  if ! bash "$REPO_DIR/scripts/install-shell.sh" --bar bottom; then
+    warn "  could not add the Start button to the bar layout"
+    warn "  retry later with: $REPO_DIR/scripts/install-shell.sh --bar bottom"
+  fi
 }
 
 install_fonts() {

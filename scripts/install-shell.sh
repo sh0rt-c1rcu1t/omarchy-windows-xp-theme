@@ -51,10 +51,49 @@ command -v jq >/dev/null || {
   exit 2
 }
 
+# A machine that has never had its bar customised has no shell.json: the shell
+# falls back to the config shipped with the Omarchy package. Seeding from that
+# default is what a fresh install needs, and it has to happen before the backup
+# below or there is nothing to back up.
 if [ ! -f "$SHELL_CONFIG" ]; then
-  echo "install-shell: $SHELL_CONFIG does not exist; is Omarchy set up?" >&2
-  exit 1
+  packaged=""
+  for candidate in "${OMARCHY_PATH:-}/config/omarchy/shell.json" \
+                   /usr/share/omarchy/config/omarchy/shell.json; do
+    if [ -n "$candidate" ] && [ -f "$candidate" ]; then
+      packaged="$candidate"
+      break
+    fi
+  done
+
+  mkdir -p "$(dirname "$SHELL_CONFIG")"
+
+  if [ -n "$packaged" ]; then
+    cp "$packaged" "$SHELL_CONFIG"
+    echo "Created $SHELL_CONFIG from $packaged"
+  else
+    # No packaged default to copy: write a minimal but valid config. `version`
+    # is required, and the shell falls back to its built-in defaults for
+    # anything this leaves out.
+    cat >"$SHELL_CONFIG" <<'JSON'
+{
+  "version": 1,
+  "idle": { "screensaver": 150, "lock": 300 },
+  "bar": {
+    "position": "bottom",
+    "transparent": false,
+    "layout": { "left": [], "center": [], "right": [] }
+  },
+  "plugins": []
+}
+JSON
+    echo "Created a minimal $SHELL_CONFIG (no packaged default was found)"
+  fi
 fi
+
+[ -s "$SHELL_CONFIG" ] || {
+  echo "install-shell: $SHELL_CONFIG is empty; refusing to edit it" >&2
+  exit 1
+}
 
 backup="$SHELL_CONFIG.bak.windows-xp.$(date +%s)"
 cp "$SHELL_CONFIG" "$backup"
