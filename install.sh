@@ -189,6 +189,66 @@ install_menu_extensions() {
   step "  installed $target"
 }
 
+ensure_wallpaper() {
+  # The photograph is not tracked (see .gitignore), so a fresh clone must still
+  # end up with a wallpaper. Render the stand-in at the logical desktop size --
+  # fitting to the physical size would produce the wrong aspect ratio, which the
+  # compositor then crops and magnifies by the scale factor, and that is what
+  # makes a wallpaper look soft on a HiDPI screen.
+  local photo="$REPO_DIR/backgrounds/0-bliss-original.png"
+  local stand_in="$REPO_DIR/backgrounds/1-bliss.jpg"
+
+  if [ -f "$photo" ]; then
+    step "Wallpaper: using backgrounds/0-bliss-original.png"
+    return
+  fi
+
+  if [ -f "$stand_in" ] && [ "$stand_in" -nt "$REPO_DIR/tools/generate-wallpapers.py" ]; then
+    step "Wallpaper: using the rendered stand-in backgrounds/1-bliss.jpg"
+    return
+  fi
+
+  step "Wallpaper: rendering the stand-in (no photograph present)"
+  local logical="3840x2160"
+  local monitors width height scale
+  if monitors=$(hyprctl monitors -j 2>/dev/null) && [ -n "$monitors" ]; then
+    width=$(printf '%s' "$monitors" | jq -r '.[0].width // empty')
+    height=$(printf '%s' "$monitors" | jq -r '.[0].height // empty')
+    scale=$(printf '%s' "$monitors" | jq -r '.[0].scale // 1')
+    if [ -n "$width" ] && [ -n "$height" ]; then
+      logical="$((width / ${scale%.*}))x$((height / ${scale%.*}))"
+    fi
+  fi
+
+  if ! python3 -c "import numpy" >/dev/null 2>&1; then
+    warn "  numpy is not installed, so the wallpaper cannot be rendered"
+    warn "  install it, run the generator, or add your own image:"
+    warn "    omarchy pkg add python-numpy"
+    warn "    python3 tools/generate-wallpapers.py backgrounds --size 3840x2160"
+    warn "    scripts/install-wallpaper.sh /path/to/bliss.jpg"
+    return
+  fi
+
+  if python3 "$REPO_DIR/tools/generate-wallpapers.py" "$REPO_DIR/backgrounds" \
+    --only 1-bliss --size "$logical" --format jpg >/dev/null; then
+    step "  rendered at $logical"
+  else
+    warn "  rendering failed; run scripts/install-wallpaper.sh with your own image"
+  fi
+
+  if [ ! -f "$stand_in" ]; then
+    return
+  fi
+
+  cat <<EOF
+
+  The real Bliss photograph is not in this checkout. To use it, add your own copy:
+
+    scripts/install-wallpaper.sh /path/to/bliss.jpg
+
+EOF
+}
+
 install_action_scripts() {
   step "Installing the folder opener used by the Start menu rows"
   local bin_dir="$HOME/.local/bin"
@@ -353,6 +413,7 @@ main() {
   preflight
   install_theme
   install_plugins
+  ensure_wallpaper
   install_action_scripts
   install_menu_extensions
   install_sounds
