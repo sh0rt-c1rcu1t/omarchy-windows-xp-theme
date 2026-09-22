@@ -17,6 +17,12 @@
 # directory. The menu rows resolve their targets through `xdg-user-dir` at click
 # time, so they follow that machine's real folders automatically; this script
 # reports what they will open so it can be checked rather than assumed.
+#
+# It never prompts, so it can be piped straight into bash or driven over SSH:
+#
+#   ssh manny@manny-aio 'bash -s --' < tools/bootstrap-remote.sh
+#
+# Anything else you pass is forwarded to install.sh, e.g. `--fonts`.
 
 set -euo pipefail
 
@@ -59,7 +65,15 @@ fi
 # on a fresh machine they are worth doing deliberately. Pass them through if the
 # caller asked: bootstrap-remote.sh --all
 step "Running install.sh ${*:-}"
-"$REPO_DIR/install.sh" "$@"
+# --no-theme keeps omarchy's theme apply, which needs a live desktop session,
+# from failing an SSH-driven run; the theme is applied separately below when a
+# session is present.
+if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+  "$REPO_DIR/install.sh" "$@"
+else
+  step "  no live session detected: installing files, skipping 'omarchy theme set'"
+  "$REPO_DIR/install.sh" --no-theme "$@"
+fi
 
 # ----------------------------------------------------- verify the mapping
 step "Folder targets on $(hostname)"
