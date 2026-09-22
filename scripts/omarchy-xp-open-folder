@@ -25,6 +25,14 @@
 
 set -euo pipefail
 
+# --print-target resolves and prints instead of launching, so the mapping can be
+# checked on a machine without opening a window for every row.
+PRINT_ONLY=0
+if [[ ${1:-} == "--print-target" ]]; then
+  PRINT_ONLY=1
+  shift
+fi
+
 TARGET="${1:-}"
 ARG="${2:-}"
 
@@ -58,9 +66,16 @@ resolve() {
     printf '%s' "$dir"
     ;;
   removable)
-    # Where udisks2 mounts removable media. With nothing plugged in the
-    # directory may not exist yet, so fall back to the home folder.
-    for candidate in "/run/media/$USER" "/media/$USER" "/run/media/$ARG"; do
+    # Where udisks2 mounts removable media. Nothing plugged in means the
+    # per-user directory may not exist yet, in which case the home folder is the
+    # more useful place to land.
+    #
+    # The user name comes from `id -un` rather than $USER: $USER is not
+    # guaranteed to be exported, and when it is empty the candidate collapses to
+    # "/run/media/", a directory that exists but belongs to nobody.
+    local name
+    name=$(id -un)
+    for candidate in "/run/media/$name" "/media/$name"; do
       if [[ -d $candidate ]]; then
         printf '%s' "$candidate"
         return
@@ -86,6 +101,11 @@ if [[ $LOCATION != trash://* && ! -e $LOCATION ]]; then
     candidate=$(dirname "$candidate")
   done
   LOCATION="$candidate"
+fi
+
+if (( PRINT_ONLY )); then
+  printf '%s\n' "$LOCATION"
+  exit 0
 fi
 
 # --new-window so a click always lands on the folder that was clicked, instead
